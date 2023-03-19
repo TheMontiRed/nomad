@@ -1,6 +1,9 @@
 import { Category } from './category';
 
 export interface Product {
-  addedBy: string;
+  product: string;
+  quantity: number;
+  imageUrl: string;
+  description: string;
   category: Category,
 }
