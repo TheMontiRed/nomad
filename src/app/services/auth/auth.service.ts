@@ -1,44 +1,45 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged  } from "firebase/auth";
+import { getDatabase, ref, set, child, get } from "firebase/database";
+import { environment } from 'src/environments/environment';
+import { Router } from "@angular/router"
 
-// TODO: Replace the following with your app's Firebase project configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyALtLhcdoNOMxzDKwUmZCR1QZRjE0mdRmA",
-  authDomain: "nomad-33e4d.firebaseapp.com",
-  projectId: "nomad-33e4d",
-  storageBucket: "nomad-33e4d.appspot.com",
-  messagingSenderId: "834843844929",
-  appId: "1:834843844929:web:44152ea3396aa75d9a41c0",
-  measurementId: "G-HHMJBBFTR3"
-};
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(environment.firebaseConfig);
 const auth = getAuth(app);
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   isLoading: boolean = false;
+  isLoggedin: boolean = false;
   errorMessage: string = "";
+  isAdmin: boolean;
+  displayName: string;
+  imageURL: any;
+  email: string | null;
 
-  constructor() { }
+  constructor(private router: Router) {
+    this.updateUser();
+  }
 
-  async signup(email: string, password: string) {
-
+  async signup(email: string, password: string, isAdmin: boolean) {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        this.isLoggedin = true;
+        // Add entry in userType DB
+        this.writeUserData(userCredential.user.uid, isAdmin);
+        // Navigate to dashbaord
+        this.router.navigate(['/dashboard']);
         // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        // ...
+        console.log(userCredential.user);
+        this.errorMessage = "";
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorMessage);
+        this.errorMessage = errorMessage;
         // ..
       });
   }
@@ -46,13 +47,72 @@ export class AuthService {
   async signin(email: string, password: string) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        // Get user type
+        this.getUserType(userCredential.user.uid);
+        // Navigate to dashbaord
+        this.router.navigate(['/dashboard']);
         // Signed in
-        const user = userCredential.user;
+        console.log(userCredential.user);
+
+        this.errorMessage = "";
         // ...
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
+        this.errorMessage = errorMessage;
       });
+  }
+
+  logout() {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      console.log("Sign-out successful.");
+      location.reload();
+    }).catch((error) => {
+      console.log("An error");
+    });
+  }
+
+  writeUserData(userId: string, isAdmin: boolean) {
+    const db = getDatabase();
+    set(ref(db, 'userType/' + userId), {
+      isAdmin: isAdmin
+    });
+  }
+
+  getUserType(userId: string) {
+    const dbRef = ref(getDatabase());
+    return get(child(dbRef, `userType/${userId}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  updateUser() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        this.isLoggedin = true;
+        this.displayName = user.uid;
+        this.imageURL = this.imageURL;
+        this.email = user.email;
+        this.getUserType(user.uid).then(response => {
+          this.isAdmin = response.isAdmin;
+        });
+      } else {
+        // User is signed out
+        this.isAdmin = false;
+        this.isLoggedin = false;
+        this.displayName = "";
+        this.imageURL = "";
+        this.email = "";
+      }
+    });
   }
 }

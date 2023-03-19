@@ -11,9 +11,15 @@ export class SignupComponent implements OnInit {
   isLoading: boolean = false;
   user: any;
   errorMessage:string = "";
+  admin: boolean = false;
 
   constructor(public authService: AuthService) { }
   ngOnInit(): void {
 
+  }
+
+  isAdmin(){
+    this.admin = !this.admin;
+    console.log(this.admin);
   }
 }
