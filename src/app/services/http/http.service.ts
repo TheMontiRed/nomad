@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set } from "firebase/database";
 import { environment } from 'src/environments/environment';
-import { User } from 'src/app/models/user/user';
+import { User } from 'src/app/models/user';
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = environment.firebaseConfig;

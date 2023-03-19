@@ -10,8 +10,8 @@ import { SigninComponent } from './pages/auth/signin/signin.component';
 import { SignupComponent } from './pages/auth/signup/signup.component';
 import { SpinnerComponent } from './pages/components/spinner/spinner.component';
 import { ProfileComponent } from './pages/shared/profile/profile.component';
-import { NavbarComponent } from './pages/shared/navbar/navbar.component';
-import { DashboardComponent } from './pages/components/dashboard/dashboard.component';
+import { NavbarComponent } from './shared/navbar/navbar.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 
 @NgModule({
