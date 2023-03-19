@@ -31,7 +31,6 @@ export class NavbarComponent implements OnInit {
         this.email = user.email;
         this.authService.getUserType(user.uid).then(response=>{
           this.isAdmin = response.isAdmin;
-          console.log(this.isAdmin);
         });
       } else {
         // User is signed out

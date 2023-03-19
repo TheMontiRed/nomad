@@ -1,0 +1,28 @@
+<app-navbar></app-navbar>
+
+
+<div class="container">
+  <hr>
+  <h1>Add category</h1>
+  <hr>
+  <div class="row">
+    <div class="col">
+      <form>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Category</label>
+          <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Category" ngModel name="category" #category required>
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+          <textarea type="text" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="A short description" ngModel name="description" #description required></textarea>
+        </div>
+
+        <button type="btn" class="btn btn-primary" (click)="addCategory(category.value, description.value)">Add category</button>
+      </form>
+    </div>
+    <div class="col">
+      <app-category></app-category>
+    </div>
+  </div>
+
+</div>

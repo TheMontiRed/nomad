@@ -13,6 +13,8 @@ import { ProfileComponent } from './pages/shared/profile/profile.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
+import { CategoryComponent } from './pages/category/category.component';
+import { AddCategoryComponent } from './pages/category/add-category/add-category.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { AddProductComponent } from './pages/products/add-product/add-product.co
     ProfileComponent,
     NavbarComponent,
     DashboardComponent,
-    AddProductComponent
+    AddProductComponent,
+    CategoryComponent,
+    AddCategoryComponent
   ],
   imports: [
     BrowserModule,

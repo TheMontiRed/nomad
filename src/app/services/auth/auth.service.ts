@@ -19,6 +19,7 @@ export class AuthService {
   displayName: string;
   imageURL: any;
   email: string | null;
+  userUid: string;
 
   constructor(private router: Router) {
     this.updateUser();
@@ -98,11 +99,12 @@ export class AuthService {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
+        this.userUid = user.uid;
         this.isLoggedin = true;
         this.displayName = user.uid;
         this.imageURL = this.imageURL;
         this.email = user.email;
-        this.getUserType(user.uid).then(response => {
+        this.getUserType(this.userUid).then(response => {
           this.isAdmin = response.isAdmin;
         });
       } else {
