@@ -31,13 +31,19 @@ export class ProductsService {
     })
   }
 
-  getCategory(category: string) {
+  createProduct(product: string, quantity: number, imageUrl: string, description: string, category: string) {
     const db = getDatabase();
-    const categoryRef = ref(db, 'categories/' + category);
-    onValue(categoryRef, (snapshot) => {
-      const data = snapshot.val()
-      console.log(data);
-    });
+    // Get a key for a new Post.
+    const newProductKey = push(child(ref(db), 'products')).key;
+    set(ref(db, 'products/' + newProductKey), {
+      product: product,
+      quantity: quantity,
+      imageUrl: imageUrl,
+      description: description,
+      category: category,
+    }).then(res => {
+      console.log(res);
+    })
   }
 
   snapshotToArray(snapshot: DataSnapshot) {
