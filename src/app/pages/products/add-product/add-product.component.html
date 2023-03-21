@@ -10,26 +10,27 @@
 
         <div class="mb-3">
           <label for="productName" class="form-label">Product name</label>
-          <input type="text" class="form-control" id="productName" placeholder="productName" ngModel
-            name="category" #productName required>
+          <input type="text" class="form-control" id="productName" placeholder="productName" ngModel name="category"
+            #productName required>
         </div>
 
         <div class="mb-3">
           <label for="quantity" class="form-label">Quantity</label>
-          <input type="number" class="form-control" id="quantity" placeholder="2" ngModel
-            name="quantity" #quantity required>
+          <input type="number" class="form-control" id="quantity" placeholder="2" ngModel name="quantity" #quantity
+            required>
         </div>
 
         <div class="mb-3">
           <label for="category" class="form-label">Category</label>
-          <textarea type="text" class="form-control" id="category" rows="3"
-            placeholder="A short description" ngModel name="category" #category required></textarea>
+          <select class="form-select" aria-label="Default select example" name="selectedFacilityId" ng-model="selectedFacilityId" #category>
+            <option *ngFor="let category of categories" value="{{category.key}}">{{ category.category}}</option>
+          </select>
         </div>
 
         <div class="mb-3">
           <label for="imageUrl" class="form-label">Image url</label>
-          <input type="text" class="form-control" id="imageUrl" placeholder="Image URL" ngModel
-            name="imageUrl" #imageUrl required>
+          <input type="text" class="form-control" id="imageUrl" placeholder="Image URL" ngModel name="imageUrl"
+            #imageUrl required>
         </div>
 
         <div class="mb-3">
@@ -38,7 +39,9 @@
             placeholder="A short description" ngModel name="description" #description required></textarea>
         </div>
 
-        <button type="btn" class="btn btn-primary" (click)="createProduct(productName.value, 5, description.value, imageUrl.value, category.value)">Add product</button>
+        <button type="btn" class="btn btn-primary"
+          (click)="createProduct(productName.value, 5, description.value, imageUrl.value, category.value)">Add
+          product</button>
       </form>
     </div>
   </div>

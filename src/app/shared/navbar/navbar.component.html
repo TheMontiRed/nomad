@@ -30,10 +30,6 @@
           <a class="nav-link disabled">Disabled</a>
         </li>
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
 
       <div style="width:20px"></div>
       <button *ngIf="!this.isLoggedIn" type="button" class="btn btn-outline-success" (click)="login()">Login</button>
@@ -42,8 +38,8 @@
       <button *ngIf="this.isLoggedIn" type="button" class="btn btn-outline-success" (click)="logout()">Logout</button>
 
       <div style="width:20px"></div>
-      <button *ngIf="this.isLoggedIn" type="button" class="btn btn-success">
-        Cart <span class="badge badge-light">9</span>
+      <button *ngIf="this.isLoggedIn" type="button" class="btn btn-success" (click)="viewCart()">
+        Cart <span class="badge badge-light"> 0 </span>
       </button>
 
       <div style="width:20px"></div>
@@ -59,4 +55,18 @@
     </div>
   </div>
 </nav>
+<div class="jumbotron">
+  <figure class="text-center">
+    <blockquote class="blockquote">
+      <h1 class="display-1">Adventure is worthwhile</h1>
+    </blockquote>
+    <figcaption class="blockquote-footer">
+      <cite title="Source Title">Aesop</cite>
+    </figcaption>
+    <form class="d-flex" role="search">
+      <input class="form-control me-2" type="search" placeholder="Enter Category, eg Flight" aria-label="Search">
+      <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+  </figure>
+</div>
 <router-outlet></router-outlet>

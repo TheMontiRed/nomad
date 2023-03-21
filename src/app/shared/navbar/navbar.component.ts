@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { getAuth, onAuthStateChanged} from "firebase/auth";
 import { AuthService } from 'src/app/services/auth/auth.service';
 import {Router} from "@angular/router"
+import { ProductsService } from 'src/app/services/products/products.service';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { Cart } from '/Users/es/Documents/DEV/Mara Nomads/nomad/src/app/models/cart';
 
 @Component({
   selector: 'app-navbar',
@@ -15,11 +18,19 @@ export class NavbarComponent implements OnInit {
   isAdmin: boolean = false;
   seeAddProductIcon: false;
   imageURL: "https://as1.ftcdn.net/v2/jpg/04/45/40/06/1000_F_445400651_kagmn1i9TZpCw1HGDBPIBnB1OB5eZ9Rb.jpg";
+  productSubscription: Subscription;
+  authSubscription: Subscription;
+  userUid: any;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  @Input() cart : Cart;
+
+  constructor(private authService: AuthService, private router: Router, private productService: ProductsService) { }
+
+  cartItems = 0;
 
   ngOnInit(): void {
 
+    console.log("Navabar cart: ", this.cart);
     const auth = getAuth();
 
     onAuthStateChanged(auth, (user) => {
@@ -38,6 +49,14 @@ export class NavbarComponent implements OnInit {
         this.isLoggedIn = false;
       }
     });
+
+    this.getUser();
+  }
+
+  async getUser() {
+    this.authSubscription = this.authService.userUid.subscribe(user => {
+      this.userUid = user;
+    });
   }
 
   logout(){
@@ -52,5 +71,10 @@ export class NavbarComponent implements OnInit {
   addProduct(){
     this.router.navigate(['/add-product'])
     console.log("/add-product");
+  }
+
+  viewCart(){
+    this.router.navigate(['/cart']);
+    console.log("/cart");
   }
 }

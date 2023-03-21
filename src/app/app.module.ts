@@ -15,6 +15,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 import { CategoryComponent } from './pages/category/category.component';
 import { AddCategoryComponent } from './pages/category/add-category/add-category.component';
+import { ProductsComponent } from './pages/products/products/products.component';
+import { CartComponent } from './pages/cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { AddCategoryComponent } from './pages/category/add-category/add-category
     DashboardComponent,
     AddProductComponent,
     CategoryComponent,
-    AddCategoryComponent
+    AddCategoryComponent,
+    ProductsComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,

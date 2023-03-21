@@ -7,6 +7,7 @@ import { AddProductComponent } from './pages/products/add-product/add-product.co
 import { AuthGuard } from './services/guard/guard.guard';
 import { CategoryComponent } from './pages/category/category.component';
 import { AddCategoryComponent } from './pages/category/add-category/add-category.component';
+import { CartComponent } from './pages/cart/cart.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -14,7 +15,9 @@ const routes: Routes = [
   { path: 'signin', component: SigninComponent },
   { path: 'add-product', component: AddProductComponent, canActivate: [AuthGuard]  },
   { path: 'add-category', component: AddCategoryComponent},
+  { path: 'cart', component: CartComponent},
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+
 ];
 
 @NgModule({

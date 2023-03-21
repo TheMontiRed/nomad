@@ -3,7 +3,9 @@ import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged  } from "firebase/auth";
 import { getDatabase, ref, set, child, get } from "firebase/database";
 import { environment } from 'src/environments/environment';
-import { Router } from "@angular/router"
+import { IsActiveMatchOptions, Router } from "@angular/router"
+import { BehaviorSubject } from 'rxjs';
+import { User } from 'src/app/models/user';
 
 const app = initializeApp(environment.firebaseConfig);
 const auth = getAuth(app);
@@ -12,6 +14,10 @@ const auth = getAuth(app);
   providedIn: 'root'
 })
 export class AuthService {
+
+  userUidSubject: BehaviorSubject<any> = new BehaviorSubject('');
+  userUid = this.userUidSubject.asObservable();
+
   isLoading: boolean = false;
   isLoggedin: boolean = false;
   errorMessage: string = "";
@@ -19,7 +25,7 @@ export class AuthService {
   displayName: string;
   imageURL: any;
   email: string | null;
-  userUid: string;
+
 
   constructor(private router: Router) {
     this.updateUser();
@@ -99,12 +105,13 @@ export class AuthService {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
-        this.userUid = user.uid;
+        this.userUidSubject.next(user.uid);
         this.isLoggedin = true;
         this.displayName = user.uid;
         this.imageURL = this.imageURL;
         this.email = user.email;
-        this.getUserType(this.userUid).then(response => {
+
+        this.getUserType(user.uid).then(response => {
           this.isAdmin = response.isAdmin;
         });
       } else {

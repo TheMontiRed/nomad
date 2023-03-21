@@ -13,7 +13,6 @@ export class AddCategoryComponent implements OnInit {
 
   constructor(private productService: ProductsService) { }
 
-  categories: any[];
   subcription: Subscription;
 
   ngOnInit(): void {
