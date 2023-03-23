@@ -80,7 +80,6 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/cart']).then(()=>{
       window.location.reload;
       return false;
-
     });
   }
 }
