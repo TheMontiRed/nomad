@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { pipe, Subscription } from 'rxjs';
 
 import { Cart } from 'src/app/models/cart';
@@ -14,8 +14,11 @@ import { ProductsService } from 'src/app/services/products/products.service';
 })
 export class CartComponent implements OnInit {
 
+  constructor(private productService: ProductsService, private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute) {
+      activatedRoute.params.subscribe(val => {
 
-  constructor(private productService: ProductsService, private authService: AuthService, private router: Router) { }
+      });
+   }
 
   products: Product[];
   alertMessage: string;
@@ -23,33 +26,32 @@ export class CartComponent implements OnInit {
   authSubscription: Subscription;
   userUid: string;
   isLoading: boolean;
-  cart: Cart;
-
+  cart: Cart [];
 
   ngOnInit(): void {
-    this.getUser();
     this.getProductsFromCart();
   }
 
-  getUser() {
+  async getProductsFromCart() {
     this.authSubscription = this.authService.userUid.subscribe(user => {
-      this.userUid = user;
+      const userObject: any = Object.values(user);
+      this.userUid = userObject[4];
+      console.log("User", this.userUid);
+
+      this.productService.getProductsFromCart(this.userUid).subscribe(cart => {
+        this.cart = cart;
+        console.log(this.cart);
+      });
     });
   }
-
-  getProductsFromCart() {
-    this.productService.getProductsInCart(this.userUid).subscribe(cart => {
-      Object.values(cart).map(pipe((x:Cart) => {
-        this.cart = x;
-        console.log(x);
-      }));
-    });
-  }
-
   // Todo
-  removeProductFromCart(){
-
+  removeProductFromCart(productKey?: string) {
   }
 
-
+  checkOut(){
+    this.router.navigate(['/checkout']).then(()=>{
+      window.location.reload;
+      return false;
+    });
+  }
 }

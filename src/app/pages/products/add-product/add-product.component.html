@@ -16,7 +16,13 @@
 
         <div class="mb-3">
           <label for="quantity" class="form-label">Quantity</label>
-          <input type="number" class="form-control" id="quantity" placeholder="2" ngModel name="quantity" #quantity
+          <input type="number" class="form-control" id="quantity" ngModel name="quantity" #quantity
+            required>
+        </div>
+
+        <div class="mb-3">
+          <label for="price" class="form-label">Price</label>
+          <input type="number" class="form-control" id="price" ngModel name="price" #price
             required>
         </div>
 
@@ -40,7 +46,7 @@
         </div>
 
         <button type="btn" class="btn btn-primary"
-          (click)="createProduct(productName.value, 5, description.value, imageUrl.value, category.value)">Add
+          (click)="createProduct(productName.value, 4, description.value, imageUrl.value, category.value, 3000)">Add
           product</button>
       </form>
     </div>

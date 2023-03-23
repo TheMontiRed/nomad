@@ -15,10 +15,11 @@ import { ProductsService } from 'src/app/services/products/products.service';
 export class ProductsComponent implements OnInit, OnDestroy {
 
   products: Product[];
+  product: Product;
   alertMessage: string;
   productSubscription: Subscription;
   authSubscription: Subscription;
-  userUid: string;
+  user: string;
   isLoading: boolean;
 
   constructor(private productService: ProductsService, private authService: AuthService, private router: Router) { }
@@ -30,7 +31,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   getUser() {
     this.authSubscription = this.authService.userUid.subscribe(user => {
-      this.userUid = user;
+      const userObject: any = Object.values(user);
+      this.user = userObject[4];
     });
   }
 
@@ -42,13 +44,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
   }
 
-  addProductToCart(product: string) {
-    if (this.userUid == '') {
-      console.log("There's no user", this.userUid);
+  addProductToCart(productID: string) {
+    this.productService.getProductbyID(productID).subscribe(product => this.product = product);
+    if (this.user == '') {
+      console.log("There's no user", this.user);
       this.router.navigate(['/signin']);
     } else {
-      console.log("There' a user", this.userUid);
-      this.productService.addProductToCart(product, this.userUid);
+      console.log("There' a user", this.user);
+      this.productService.addProductToCart(this.product, productID, this.user);
       this.alertMessage = this.productService.alertMessage;
     }
   }

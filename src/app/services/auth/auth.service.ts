@@ -105,7 +105,7 @@ export class AuthService {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
-        this.userUidSubject.next(user.uid);
+        this.userUidSubject.next(user);
         this.isLoggedin = true;
         this.displayName = user.uid;
         this.imageURL = this.imageURL;

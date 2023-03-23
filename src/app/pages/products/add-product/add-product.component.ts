@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {Router} from "@angular/router"
 import { Category } from 'src/app/models/category';
 import { ProductsService } from 'src/app/services/products/products.service';
 
@@ -18,8 +17,8 @@ export class AddProductComponent implements OnInit {
     this.getCategories();
   }
 
-  createProduct(product: string, quantity: number, imageUrl: string, description: string, category: string) {
-    this.productService.createProduct(product, quantity, description, imageUrl, category);
+  createProduct(product: string, quantity: number, imageUrl: string, description: string, category: string, price: number) {
+    this.productService.createProduct(product, quantity, description, imageUrl, category, price);
   }
 
   getCategories(){

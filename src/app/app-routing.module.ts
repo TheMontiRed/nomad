@@ -5,9 +5,9 @@ import { SignupComponent } from './pages/auth/signup/signup.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddProductComponent } from './pages/products/add-product/add-product.component';
 import { AuthGuard } from './services/guard/guard.guard';
-import { CategoryComponent } from './pages/category/category.component';
 import { AddCategoryComponent } from './pages/category/add-category/add-category.component';
 import { CartComponent } from './pages/cart/cart.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -16,6 +16,7 @@ const routes: Routes = [
   { path: 'add-product', component: AddProductComponent, canActivate: [AuthGuard]  },
   { path: 'add-category', component: AddCategoryComponent},
   { path: 'cart', component: CartComponent},
+  { path: 'checkout', component: CheckoutComponent},
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
 ];

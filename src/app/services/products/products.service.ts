@@ -18,7 +18,7 @@ export class ProductsService {
   private categoriesSource: BehaviorSubject<any> = new BehaviorSubject([]);
   private productSource: BehaviorSubject<any> = new BehaviorSubject('Product');
   private productsSource: BehaviorSubject<any> = new BehaviorSubject([]);
-  private cartSource: BehaviorSubject<any> = new BehaviorSubject([]);
+  private cartSource: BehaviorSubject<any> = new BehaviorSubject('');
   gottenCategory = this.categorySource.asObservable();
   categories = this.categoriesSource.asObservable();
   gottenProduct = this.productSource.asObservable();
@@ -27,6 +27,7 @@ export class ProductsService {
   errorMessage: string;
   product: Product;
   cart: Cart;
+  carts: Cart [];
   alertMessage: any;
 
   constructor(private authService: AuthService, private router: Router) {
@@ -64,7 +65,7 @@ export class ProductsService {
     return this.categoriesSource;
   }
 
-  createProduct(product: string, quantity: number, imageUrl: string, description: string, category: string) {
+  createProduct(product: string, quantity: number, imageUrl: string, description: string, category: string, price: number) {
     this.product = {
       key: "",
       product: product,
@@ -72,7 +73,9 @@ export class ProductsService {
       imageUrl: imageUrl,
       description: description,
       category: category,
+      price: price
     }
+    JSON.parse( JSON.stringify(this.product))
     const newProductKey = push(child(ref(this.db), 'products')).key;
     set(ref(this.db, 'products/' + newProductKey), this.product)
       .then(res => {
@@ -84,7 +87,7 @@ export class ProductsService {
     this.router.navigate(['/dashboard']);
   }
 
-  getProducts(product: string) {
+  getProductbyID(product: string) {
     const productRef = ref(this.db, 'products/' + product);
     onValue(productRef, (snapshot) => {
       this.productSource.next(snapshot.val());
@@ -127,43 +130,49 @@ export class ProductsService {
     this.router.navigate(['/dashboard']);
   }
 
-  getProductsInCart(userUid: string): Observable<Cart> {
-    const cartRef = ref(this.db, 'cart/' + userUid);
-    onValue(cartRef, (snapshot) => {
-      const cart = this.snapshotToArray(snapshot);
-      this.cartSource.next(cart);
-    });
-    return this.cartSource;
+  getProductsFromCart(userUid: string) {
+    var carts: Cart [];
+    const productRef = ref(this.db, 'cart/'+ userUid);
+    onValue(productRef, (snapshot) => {
+      carts = this.snapshotToArray(snapshot);
+      this.productsSource.next(carts);
+    })
+    return this.productsSource;
   }
 
-  addProductToCart(product: string, userUid: string) {
+  addProductToCart(product: Product, productID: string, userUid: string) {
     const newKey = push(child(ref(this.db), 'cart')).key;
-    set(ref(this.db, 'cart/' + userUid +'/'+newKey), {
-      product: product
+    set(ref(this.db, 'cart/' + userUid + '/' +newKey), {
+      key: productID,
+      product: product.product,
+      quantity: product.quantity,
+      imageUrl: product.imageUrl,
+      description: product.description,
+      category: product.category,
+      price: product.price
     })
       .then(res => {
-        // Todo: get number of items in cart
-        // Todo: return number of items in cart
         this.alertMessage = "Item add to cart successfully", res;
         console.log(this.alertMessage + res);
-      }).catch(err => {
-        this.errorMessage = "Error: " + err.message;
-        console.log(this.errorMessage);
-      });
+        window.location.reload;
+      }).catch (err => {
+      this.errorMessage = "Error: " + err.message;
+      console.log(this.errorMessage);
+    });
     //Navigate to products page
     this.router.navigate(['/dashboard']);
-}
+  }
 
-snapshotToArray(snapshot: DataSnapshot) {
-  var returnArr: any[] = [];
+  snapshotToArray(snapshot: DataSnapshot) {
+    var returnArr: any[] = [];
 
-  snapshot.forEach(function (childSnapshot) {
-    var item = childSnapshot.val();
-    item.key = childSnapshot.key;
+    snapshot.forEach(function (childSnapshot) {
+      var item = childSnapshot.val();
+      item.key = childSnapshot.key;
 
-    returnArr.push(item);
-  });
-  return returnArr;
-};
+      returnArr.push(item);
+    });
+    return returnArr;
+  };
 }
 

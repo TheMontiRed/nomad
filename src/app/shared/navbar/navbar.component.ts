@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { getAuth, onAuthStateChanged} from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { AuthService } from 'src/app/services/auth/auth.service';
-import {Router} from "@angular/router"
+import { ActivatedRoute, Router } from "@angular/router"
 import { ProductsService } from 'src/app/services/products/products.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Cart } from '/Users/es/Documents/DEV/Mara Nomads/nomad/src/app/models/cart';
@@ -22,15 +22,18 @@ export class NavbarComponent implements OnInit {
   authSubscription: Subscription;
   userUid: any;
 
-  @Input() cart : Cart;
+  @Input() cart: Cart;
 
-  constructor(private authService: AuthService, private router: Router, private productService: ProductsService) { }
+  constructor(private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute) {
+    activatedRoute.params.subscribe(val => {
+
+    });
+   }
 
   cartItems = 0;
 
   ngOnInit(): void {
 
-    console.log("Navabar cart: ", this.cart);
     const auth = getAuth();
 
     onAuthStateChanged(auth, (user) => {
@@ -40,7 +43,7 @@ export class NavbarComponent implements OnInit {
         this.displayName = user.uid;
         this.imageURL = this.imageURL;
         this.email = user.email;
-        this.authService.getUserType(user.uid).then(response=>{
+        this.authService.getUserType(user.uid).then(response => {
           this.isAdmin = response.isAdmin;
         });
       } else {
@@ -59,22 +62,26 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  logout(){
+  logout() {
     this.authService.logout();
   }
 
-  login(){
+  login() {
     this.router.navigate(['/signin'])
     console.log("Test");
   }
 
-  addProduct(){
+  addProduct() {
     this.router.navigate(['/add-product'])
     console.log("/add-product");
   }
 
-  viewCart(){
-    this.router.navigate(['/cart']);
-    console.log("/cart");
+  viewCart() {
+    this.router.navigate(['/cart']).then(()=>{
+      window.location.reload;
+      return false;
+
+    });
   }
 }
+
