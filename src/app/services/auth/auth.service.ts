@@ -110,6 +110,7 @@ export class AuthService {
         this.displayName = user.uid;
         this.imageURL = this.imageURL;
         this.email = user.email;
+        this.userUidSubject.next(user);
 
         this.getUserType(user.uid).then(response => {
           this.isAdmin = response.isAdmin;
