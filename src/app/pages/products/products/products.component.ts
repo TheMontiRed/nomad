@@ -1,9 +1,6 @@
 import { Component, OnDestroy, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Cart } from 'src/app/models/cart';
 import { Product } from 'src/app/models/product';
-import { AuthService } from 'src/app/services/auth/auth.service';
 import { ProductsService } from 'src/app/services/products/products.service';
 
 
@@ -22,18 +19,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
   user: string;
   isLoading: boolean;
 
-  constructor(private productService: ProductsService, private authService: AuthService, private router: Router) { }
+  constructor(private productService: ProductsService) { }
 
   ngOnInit(): void {
     this.getProducts();
-    this.getUser();
-  }
-
-  getUser() {
-    this.authSubscription = this.authService.userUid.subscribe(user => {
-      const userObject: any = Object.values(user);
-      this.user = userObject[4];
-    });
   }
 
   getProducts() {
@@ -46,14 +35,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   addProductToCart(productID: string) {
     this.productService.getProductbyID(productID).subscribe(product => this.product = product);
-    if (this.user == '') {
-      console.log("There's no user", this.user);
-      this.router.navigate(['/signin']);
-    } else {
-      console.log("There' a user", this.user);
-      this.productService.addProductToCart(this.product, productID, this.user);
+      this.productService.addProductToCart(this.product, productID);
       this.alertMessage = this.productService.alertMessage;
-    }
   }
 
   ngOnDestroy(): void {
