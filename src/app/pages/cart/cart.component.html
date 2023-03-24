@@ -5,36 +5,40 @@
   <!-- Products -->
   <div class="d-flex flowx-row justify-content-center">
     <div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Photo</th>
-              <th scope="col">Description</th>
-              <th scope="col">Pax</th>
-              <th scope="col">Cost</th>
-              <th scope="col">x</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let cartItem of cart">
-              <td class="col-md-2">
-                <div class="card" >
-                  <img src="{{ cartItem.imageUrl }}" class="card-img-top" alt="...">
-                </div>
-              </td>
-              <td class="col-md-2">
-                 <div class="card-body">
-                    <h3 class="card-title">{{ cartItem.product }}</h3>
-                    <p class="card-text">{{ cartItem.category }}</p>
-                    <p class="card-text">{{ cartItem.description }}</p>
-                  </div>
-              </td>
-              <td class="col-md-2">{{ cartItem.price }}</td>
-              <td class="col-md-2">{{ cartItem.quantity }}</td>
-              <td class="col-md-2"><button class="btn btn-outline-danger" (click)="removeProductFromCart( cartItem.key )">Remove from cart</button></td>
-            </tr>
-          </tbody>
-        </table>
-        <button class="btn btn-primary" (click)="checkOut()">Checkout</button>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Photo</th>
+            <th scope="col">Description</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Pax</th>
+            <th scope="col">x</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cartItem of cart">
+            <td class="col-md-2">
+              <div class="card">
+                <img src="{{ cartItem.imageUrl }}" class="card-img-top" alt="...">
+              </div>
+            </td>
+            <td class="col-md-2">
+              <div class="card-body">
+                <h3 class="card-title">{{ cartItem.product }}</h3>
+                <p class="card-text">{{ cartItem.category }}</p>
+                <p class="card-text">{{ cartItem.description }}</p>
+              </div>
+            </td>
+            <td class="col-md-2">{{ cartItem.price }}</td>
+            <td class="col-md-2">{{ cartItem.quantity }}
+              <button class="btn btn-outline-primary" (click)="add()">+</button>
+              <button class="btn btn-outline-primary" (click)="remove()">-</button>
+            </td>
+            <td class="col-md-2"><button class="btn btn-outline-danger"
+                (click)="removeProductFromCart( cartItem.key )">Remove from cart</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-primary" (click)="checkOut()">Checkout</button>
     </div>
   </div>
