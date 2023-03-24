@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { getDatabase, ref, set, child, get, onValue, push, DataSnapshot, remove } from "firebase/database";
+import { getDatabase, ref, set, child, get, onValue, push, DataSnapshot, remove, orderByChild, query, equalTo } from "firebase/database";
 import { Category } from 'src/app/models/category';
 import { AuthService } from '../auth/auth.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../../models/product';
 import { Router } from '@angular/router';
 import { Cart } from 'src/app/models/cart';
-import { collection, query, where } from "firebase/firestore";
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +35,7 @@ export class ProductsService {
   }
 
   createCategory(category: string, description: string) {
+
     // Get a key for a new Post.
     const newCategoryKey = push(child(ref(this.db), 'categories')).key;
     set(ref(this.db, 'categories/' + newCategoryKey), {
@@ -108,7 +108,7 @@ export class ProductsService {
 
   getProductsByCategory(categoryKey: string) {
     var products: Product[]
-    const productRef = ref(this.db, 'products/');
+    const productRef = query(ref(this.db, 'products/'), orderByChild('category'), equalTo(categoryKey));
     onValue(productRef, (snapshot) => {
       products = this.snapshotToArray(snapshot);
       this.productsSource.next(products);
@@ -166,9 +166,13 @@ export class ProductsService {
 
   removeProductFromCart(cartID?: string){
     const cartRef = ref(this.db, "cart/"+this.userUid+"/"+cartID);
-    remove(cartRef).then(res =>{
+    remove(cartRef).then(() =>{
       console.log("Removed successfully");
     })
+  }
+
+  editQuantiy(cartID?: string){
+    const cartRef = ref(this.db, "cart/"+this.userUid+"/"+cartID);
   }
 
   snapshotToArray(snapshot: DataSnapshot) {

@@ -16,7 +16,6 @@ export class CartComponent implements OnInit, OnDestroy {
 
   constructor(private productService: ProductsService, private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute) {
     activatedRoute.params.subscribe(val => {
-
     });
   }
 
@@ -27,6 +26,8 @@ export class CartComponent implements OnInit, OnDestroy {
   userUid: string;
   user: any;
   isLoading: boolean;
+  quantity: number;
+  total: number;
   cart: Cart[];
 
   ngOnInit(): void {
@@ -34,37 +35,24 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   async getProductsFromCart() {
-    this.authSubscription = this.authService.userUidSubject.subscribe(user => {
-      this.productService.getProductsFromCart().subscribe(cart => {
-        this.cart = cart;
-      });
-     });
-  }
-
-  async addProductsToCart() {
-    this.authSubscription = this.authService.userUid.subscribe(user => {
-      this.productService.getProductsFromCart().subscribe(cart => {
-        this.cart = cart;
-      });
+    this.productService.getProductsFromCart().subscribe(cart => {
+      console.log("Cart -> ", cart);
+      this.cart = cart;
     });
   }
 
-  async removeProductsFromCart() {
-    this.authSubscription = this.authService.userUid.subscribe(user => {
-      const userObject: any = Object.values(user);
-      this.userUid = userObject[4];
-      console.log("User", this.userUid);
-
-      this.productService.getProductsFromCart().subscribe(cart => {
-        this.cart = cart;
-        console.log(this.cart);
-      });
+  addProductsToCart() {
+    this.productService.getProductsFromCart().subscribe(cart => {
+      this.cart = cart;
     });
   }
-
   // Todo
   removeProductFromCart(cartKey?: string) {
     this.productService.removeProductFromCart(cartKey);
+  }
+
+  editQuantity(cartID?: string){
+    this.productService.editQuantiy(cartID);
   }
 
   checkOut() {
@@ -72,13 +60,6 @@ export class CartComponent implements OnInit, OnDestroy {
       window.location.reload;
       return false;
     });
-  }
-
-  remove() {
-
-  }
-  add() {
-
   }
 
   ngOnDestroy(): void {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ActivatedRoute, Router } from "@angular/router"
@@ -11,7 +11,7 @@ import { Cart } from '/Users/es/Documents/DEV/Mara Nomads/nomad/src/app/models/c
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean;
   displayName: string | null;
   email: string | null;
@@ -28,15 +28,16 @@ export class NavbarComponent implements OnInit {
     activatedRoute.params.subscribe(val => {
 
     });
-   }
+  }
 
   cartItems = 0;
 
   ngOnInit(): void {
+    this.getUser()
+  }
 
-    const auth = getAuth();
-
-    onAuthStateChanged(auth, (user) => {
+  async getUser() {
+    this.authSubscription = this.authService.userUid.subscribe(user => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         this.isLoggedIn = true;
@@ -45,20 +46,13 @@ export class NavbarComponent implements OnInit {
         this.email = user.email;
         this.authService.getUserType(user.uid).then(response => {
           this.isAdmin = response.isAdmin;
+          this.userUid = user;
         });
       } else {
         // User is signed out
         this.isAdmin = false;
         this.isLoggedIn = false;
       }
-    });
-
-    this.getUser();
-  }
-
-  async getUser() {
-    this.authSubscription = this.authService.userUid.subscribe(user => {
-      this.userUid = user;
     });
   }
 
@@ -77,10 +71,16 @@ export class NavbarComponent implements OnInit {
   }
 
   viewCart() {
-    this.router.navigate(['/cart']).then(()=>{
+    this.router.navigate(['/cart']).then(() => {
       window.location.reload;
       return false;
     });
+  }
+
+  ngOnDestroy(): void {
+      if(this.authService){
+        this.authSubscription.unsubscribe();
+      }
   }
 }
 

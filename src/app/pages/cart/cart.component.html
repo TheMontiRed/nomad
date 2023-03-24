@@ -31,8 +31,8 @@
             </td>
             <td class="col-md-2">{{ cartItem.price }}</td>
             <td class="col-md-2">{{ cartItem.quantity }}
-              <button class="btn btn-outline-primary" (click)="add()">+</button>
-              <button class="btn btn-outline-primary" (click)="remove()">-</button>
+              <button class="btn btn-outline-primary m-2" (click)="editQuantity(cartItem.key)">+</button>
+              <button class="btn btn-outline-primary m-2" (click)="editQuantity(cartItem.key)">-</button>
             </td>
             <td class="col-md-2"><button class="btn btn-outline-danger"
                 (click)="removeProductFromCart( cartItem.key )">Remove from cart</button></td>
