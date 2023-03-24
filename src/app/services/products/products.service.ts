@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getDatabase, ref, set, child, get, onValue, push, DataSnapshot } from "firebase/database";
+import { getDatabase, ref, set, child, get, onValue, push, DataSnapshot, remove } from "firebase/database";
 import { Category } from 'src/app/models/category';
 import { AuthService } from '../auth/auth.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -29,9 +29,10 @@ export class ProductsService {
   cart: Cart;
   carts: Cart [];
   alertMessage: any;
+  userUid: string;
 
   constructor(private authService: AuthService, private router: Router) {
-
+    this.authService.userUidSubject.subscribe(user => this.userUid = user.uid);
   }
 
   createCategory(category: string, description: string) {
@@ -130,9 +131,9 @@ export class ProductsService {
     this.router.navigate(['/dashboard']);
   }
 
-  getProductsFromCart(userUid: string) {
+  getProductsFromCart() {
     var carts: Cart [];
-    const productRef = ref(this.db, 'cart/'+ userUid);
+    const productRef = ref(this.db, 'cart/'+ this.userUid);
     onValue(productRef, (snapshot) => {
       carts = this.snapshotToArray(snapshot);
       this.productsSource.next(carts);
@@ -140,9 +141,9 @@ export class ProductsService {
     return this.productsSource;
   }
 
-  addProductToCart(product: Product, productID: string, userUid: string) {
+  addProductToCart(product: Product, productID: string) {
     const newKey = push(child(ref(this.db), 'cart')).key;
-    set(ref(this.db, 'cart/' + userUid + '/' +newKey), {
+    set(ref(this.db, 'cart/' + this.userUid + '/' +newKey), {
       key: productID,
       product: product.product,
       quantity: product.quantity,
@@ -161,6 +162,13 @@ export class ProductsService {
     });
     //Navigate to products page
     this.router.navigate(['/dashboard']);
+  }
+
+  removeProductFromCart(cartID?: string){
+    const cartRef = ref(this.db, "cart/"+this.userUid+"/"+cartID);
+    remove(cartRef).then(res =>{
+      console.log("Removed successfully");
+    })
   }
 
   snapshotToArray(snapshot: DataSnapshot) {
